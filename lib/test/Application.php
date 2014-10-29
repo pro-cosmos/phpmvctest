@@ -26,19 +26,21 @@ class Application extends Singleton
 			$dirs[] = S('Config')->defaultAction;
 		}
 		$action = array_shift($dirs);
-		
+
 		if( !preg_match('#^\w+$#', $class) || !preg_match('#^\w+$#', $action) )
 		{
 			Response::headerForbidden();
 		}
 
 		$class = __NAMESPACE__ . '\\' . $this->_controllersdir . '\\' . $class;
-		$controller = new $class;
-		if( !method_exists($controller, $action) )
+		if(class_exists($class))
 		{
-			Response::headerNotFound();
+            $controller = new $class;
+            if (method_exists($controller, $action)){
+			       call_user_func_array(array($controller, $action), $dirs);
+            }
 		}
+        else  Response::headerNotFound();
 
-		call_user_func_array(array($controller, $action), $dirs);
 	}
 }
