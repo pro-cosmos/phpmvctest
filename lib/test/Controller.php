@@ -46,10 +46,8 @@ class Controller
 
 	private function _performChecks()
 	{
-		$action = S('Request')->getDir(0);
-		if ($action && in_array($action, S('Request')->getDirs())){
-          $action = S('Request')->getDir(1);
-        }
+		//Если в url вида /folder/action то action 1 элемент иначе 0
+        $action = S('Request')->getDir(1)? S('Request')->getDir(1) : S('Request')->getDir(0);
 
 		if( !$this->_isSubscribed() && ($action != 'subscribe') )
 		{
